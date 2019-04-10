@@ -1,0 +1,60 @@
+From 5869a4f95a576a9c988ab6b158d503db11d7e455 Mon Sep 17 00:00:00 2001
+From: "Justin W. Flory" <git@jwf.io>
+Date: Tue, 9 Apr 2019 19:28:22 -0400
+Subject: [PATCH 1/1] Remove unused variable to fix build errors
+
+---
+ brightlight.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/brightlight.c b/brightlight.c
+index 02587cf..89eabe1 100644
+--- a/brightlight.c
++++ b/brightlight.c
+@@ -146,7 +146,7 @@ void write_file(int dirfd, char *path, uint32_t val) {
+ 
+     if (snprintf(buf, sizeof(buf), "%" PRIu32 "\n", val) >= sizeof(buf))
+         errx(1, "could not format output buffer");
+-    
++
+     if ((fd = openat(dirfd, path, O_RDWR)) < 0)
+         err(1, "could not open \"%s\" file", path);
+ 
+@@ -250,14 +250,14 @@ int main(int argc, char *argv[]) {
+ 
+     if (strlen(ctrldir) > PATH_MAX)
+         errx(1, "path to control directory exceeds maximum path length");
+-    
++
+     if (flags & (OP_WRIT | OP_INCR | OP_DECR)) {
+         delta = strtonum(numarg, 0, UINT32_MAX, &errstr);
+         if (errstr)
+             errx(1, "invalid numeric argument: %s", errstr);
+     }
+ 
+-    if ((dirfd = open(ctrldir, O_RDONLY | O_DIRECTORY)) == -1)
++    if ((dirfd = open(ctrldir, O_RDONLY)) == -1)
+         err(1, "could not open control directory \"%s\"", ctrldir);
+ 
+     max = read_file(dirfd, MAXBRIGHT);
+@@ -271,7 +271,7 @@ int main(int argc, char *argv[]) {
+ 
+ #define current_pct() ((current * 100) / max)
+ #define maybe_pct()   (pflag ? "%" : "")
+-    
++
+     if (flags & OP_READ) {
+         printf("current backlight brightness is: %" PRIu32 "%s\n",
+                (pflag ? current_pct() : current), maybe_pct());
+@@ -309,7 +309,7 @@ int main(int argc, char *argv[]) {
+ end:
+     if (close(dirfd) < 0)
+         warn("could not close control directory file descriptor");
+-    
++
+     exit(0);
+ 
+ #undef current_pct
+-- 
+2.20.1
+

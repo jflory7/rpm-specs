@@ -1,17 +1,17 @@
 Name:           brightlight
 Version:        7
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        CLI tool to change screen back-light brightness
 
 License:        ISC
 URL:            https://github.com/multiplexd/brightlight
 Source0:        %{url}/archive/v%{version}/%{name}-%{version}.tar.gz
 
-Patch0:         add-license-file.patch
+Patch0:         brightlight-add-license-file.patch
+Patch1:         brightlight-remove-unused-vars.patch
 
 BuildRequires:  gcc
 BuildRequires:  libbsd-devel
-BuildRequires:  make
 
 
 %description
@@ -24,7 +24,7 @@ using the kernel sysfs interface.
 %autosetup
 
 %build
-export CFLAGS="%{optflags}"
+export CFLAGS="%{optflags} -std=c99"
 export LDFLAGS="%{__global_ldflags}"
 %make_build
 
